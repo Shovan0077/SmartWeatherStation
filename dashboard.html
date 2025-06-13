@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Weather Dashboard</title>
+  <style>
+    body {
+      background: black;
+      font-family: "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: white;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+      
+    }
+    .item {
+      background: #ecf0f1;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .item h3 {
+      margin: 5px 0;
+      font-size: 20px;
+      font-style: Open Sans;
+      color: black;
+    }
+
+    .item p {
+      font-size: 20px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th, td {
+      text-align: center;
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    th {
+      background: black;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Weather Update & Forecast</h1>
+
+    <div class="card">
+      <h2>Present Weather</h2>
+      <div class="grid" id="current">
+        <div class="item"><h3>Temperature (°C)</h3><p id="temp">--</p></div>
+        <div class="item"><h3>Humidity (%)</h3><p id="hum">--</p></div>
+        <div class="item"><h3>Pressure (hPa)</h3><p id="pres">--</p></div>
+        <div class="item"><h3>LDR</h3><p id="ldr">--</p></div>
+        <div class="item"><h3>Rain</h3><p id="rain">--</p></div>
+        <div class="item"><h3>Condition</h3><p id="cond">--</p></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Next 1 Hour Forecast</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Temperature (°C)</th>
+            <th>Humidity (%)</th>
+            <th>Pressure (hPa)</th>
+          </tr>
+        </thead>
+        <tbody id="forecast-table">
+          <tr><td colspan="4">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const fetchLatest = async () => {
+      try {
+        const res = await fetch("http://192.168.242.179:5000/latest");
+        const data = await res.json();
+        document.getElementById("temp").innerText = data.temperature;
+        document.getElementById("hum").innerText = data.humidity;
+        document.getElementById("pres").innerText = data.pressure;
+        document.getElementById("ldr").innerText = data.ldr;
+        document.getElementById("rain").innerText = data.rain;
+      } catch (e) {
+        console.error("Error fetching latest:", e);
+      }
+    };
+
+    const fetchForecast = async () => {
+      try {
+        const res = await fetch("http://192.168.242.179:5000/forecast");
+        const data = await res.json();
+        document.getElementById("cond").innerText = data.condition || "--";
+
+        const tbody = document.getElementById("forecast-table");
+        tbody.innerHTML = "";
+
+        data.forecast.forEach(row => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${row.time}</td>
+            <td>${row.temperature}</td>
+            <td>${row.humidity}</td>
+            <td>${row.pressure}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (e) {
+        console.error("Error fetching forecast:", e);
+      }
+    };
+
+    const updateAll = () => {
+      fetchLatest();
+      fetchForecast();
+    };
+
+    // Initial fetch
+    updateAll();
+
+    // Auto-update every 10 seconds
+    setInterval(updateAll, 10000);
+  </script>
+</body>
+</html>
