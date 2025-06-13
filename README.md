@@ -1,8 +1,8 @@
 SMART WEATHER STATION & FORECASTING
 
-HARDWARE:- ESP32, DHT11, BMP180, RAIN SENSOR, LDR SENSOR, CONNECTING WIRES, BREADBOARD
-CORE-STACK:- ARDUINO IDE, PYTHON, FLASK, CSV, HTML,CSS
-LIBRARIES USED:- pandas, numpy, sklearn.linear_model.LinearRegression, sklearn.multioutput.MultiOutputRegressor, joblib, datetime, datetime.timedelta, os
+HARDWARE:- ESP32, DHT11, BMP180, RAIN SENSOR, LDR SENSOR, CONNECTING WIRES, BREADBOARD.
+CORE-STACK:- ARDUINO IDE, PYTHON, FLASK, CSV, HTML,CSS.
+LIBRARIES USED:- pandas, numpy, sklearn.linear_model.LinearRegression, sklearn.multioutput.MultiOutputRegressor, joblib, datetime, datetime.timedelta, os.
 
 WORKFLOW OF THE PROJECT :-
 
